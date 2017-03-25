@@ -2,6 +2,7 @@
 #include <opencv2/opencv.hpp>
 
 using namespace cv;
+using namespace std;
 
 int main(int argc, char** argv) {
   if ( argc != 3 ){
@@ -16,16 +17,16 @@ int main(int argc, char** argv) {
    }
    Mat des1, des2;
    
-   ORB orb;
-   int minHessian = 400;
-   OrbFeatureDetector detector(minHessian);
+   Ptr<FeatureDetector> detector = ORB::create();
+   //int minHessian = 400;
+   //FeatureDetector detector(minHessian);
    //OrbFeatureDetector detector(25, 1.0f, 2, 10, 0, 2, 0, 10);
-   OrbDescriptorExtractor extractor;
+   Ptr<DescriptorExtractor> extractor = ORB::create();
    vector<KeyPoint> keyp1, keyp2;
-   orb.detect(im1, keyp1);
-   orb.detect(im2, keyp2);
-   orb.compute(im1, keyp1, des1);
-   orb.compute(im2, keyp2, des2);
+   detector->detect(im1, keyp1);
+   detector->detect(im2, keyp2);
+   extractor->compute(im1, keyp1, des1);
+   extractor->compute(im2, keyp2, des2);
    
   namedWindow("Display Image", WINDOW_AUTOSIZE );
   Mat imDraw;
