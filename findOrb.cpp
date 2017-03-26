@@ -18,7 +18,7 @@ int main(int argc, char** argv) {
    }
    Mat des1, des2;
    
-   Ptr<FeatureDetector> detector = ORB::create(500, 1.2f, 8, 31, 0, 2, ORB::FAST_SCORE, 31, 100);
+   Ptr<FeatureDetector> detector = ORB::create(500, 1.2f, 8, 31, 0, 2, ORB::FAST_SCORE, 31, 50);
    //int minHessian = 400;
    //detector->setHessianThreshold(minHessian);
    //FeatureDetector detector(minHessian);
@@ -67,11 +67,10 @@ int main(int argc, char** argv) {
   std::vector< DMatch > good_matches;
   for( int i = 0; i < des1.rows; i++ ) { 
 //    if( matches[i].distance <= max(2*min_dist, 0.02) ){
-  if( matches[i].distance <= 100){
+  if( matches[i].distance <= 150){
     good_matches.push_back( matches[i]); }
   }
   //-- Draw only "good" matches
-  
   cout << "drawing good matches...";
   cout << good_matches.size()<< " good matches"<<endl; 
   Mat img_matches;
