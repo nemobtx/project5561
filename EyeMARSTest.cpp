@@ -9,14 +9,14 @@
 using namespace std;
 
 int main() {
-  EyeMARS::orbextractor orb_extractor;
+/*  EyeMARS::orbextractor orb_extractor;
   std::vector<cv::KeyPoint> keypoints;
   cv::Mat descriptors;
 
   cv::Mat img = cv::imread("imgs/1.jpg");
-  orb_extractor.ExtractKeypointsDescriptors(img, keypoints, descriptors);
-/*  cv::FastFeatureDetector detector;
-  cout << detector.empty();*/
+  orb_extractor.ExtractKeypointsDescriptors(img, keypoints, descriptors);*/
+  cv::FastFeatureDetector fd(20, true);
+  cout << fd.empty();
   return 0;
 }
 
