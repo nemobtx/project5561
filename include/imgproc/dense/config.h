@@ -1,0 +1,25 @@
+/*
+ * config.h
+ *
+ *  Created on: Apr 3, 2015
+ *      Author: mars
+ */
+
+#ifndef SUBPROJECTS__MARSFRAMEWORK_LIBRARIES_EYEMARS_EYEMARSTESTER_SRC_DENSE_CONFIG_H_
+#define SUBPROJECTS__MARSFRAMEWORK_LIBRARIES_EYEMARS_EYEMARSTESTER_SRC_DENSE_CONFIG_H_
+
+#define MAX_EPL_LENGTH_CROP 30.0f
+#define GRADIENT_SAMPLE_DIST 1.0f
+#define MIN_EPL_LENGTH_CROP 3.0f
+#define SAMPLE_POINT_TO_BORDER 7
+#define MAX_ERROR_STEREO 1300.0f
+#define MIN_DISTANCE_ERROR_STEREO 1.5f
+#define DIVISION_EPS 1e-10f
+#define useSubpixelStereo true
+#define cameraPixelNoise2 4*4
+#define ref_res 0.4
+#define TangoBorder 340
+
+//#define max_img_num 25370
+
+#endif /* SUBPROJECTS__MARSFRAMEWORK_LIBRARIES_EYEMARS_EYEMARSTESTER_SRC_DENSE_CONFIG_H_ */
