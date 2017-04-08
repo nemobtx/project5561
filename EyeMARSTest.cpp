@@ -14,7 +14,12 @@ int main() {
   cv::Mat descriptors;
 
   cv::Mat img = cv::imread("imgs/1.jpg");
+  cvtColor(img, img, cv::COLOR_RGB2GRAY);
   orb_extractor.ExtractKeypointsDescriptors(img, keypoints, descriptors);
+  cv::Mat img2;
+  cv::equalizeHist(img, img2);
+  cv::imshow("1", img2);
+  cv::waitKey();
 /*  cv::FastFeatureDetector fd(20, true);
   cout << fd.empty();*/
   return 0;
