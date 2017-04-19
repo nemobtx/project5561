@@ -1,14 +1,14 @@
 #include <iostream>
 #include <opencv2/opencv.hpp>
-#include <unistd.h>
+//#include <unistd.h>
 #include "include/imgproc/orb/orbextractor.h"
-
+#include "include/imgproc/freak/freak.h"
 
 using namespace cv;
 using namespace std;
 
 int main(int argc, char** argv) {
-  if ( argc != 3 ){
+  if ( argc != 4 ){
     printf("usage: DisplayImage.out <Image1_Path> <Image2_Path> extractorType\n");
     return -1;
   }
@@ -20,17 +20,26 @@ int main(int argc, char** argv) {
     return -1;
    }
    Mat des1, des2;
-    
-    EyeMARS::orbextractor orb_extractor;
-    vector<cv::KeyPoint> keyp1, keyp2;
-    unsigned int descriptor_size = 0, distance_threshold = 0, score_threshold = 0;
+   vector<cv::KeyPoint> keyp1, keyp2;
+   unsigned int descriptor_size = 0, distance_threshold = 0, score_threshold = 0;
       
     if (USE_ORB) {
       descriptor_size = 32;
       distance_threshold = 50;
       score_threshold = 205;
+      EyeMARS::orbextractor orb_extractor;
+
       orb_extractor.ExtractKeypointsDescriptors(im1, keyp1, des1);
       orb_extractor.ExtractKeypointsDescriptors(im2, keyp2, des2);
+    } else {
+      // freak
+     descriptor_size = 64;
+     distance_threshold = 100;
+     score_threshold = 480;
+     EyeMARS::FREAKExtractor freak_extractor;
+     
+     freak_extractor.FindAndExtractFreakFeatures(im1, keyp1, des1);
+     freak_extractor.FindAndExtractFreakFeatures(im2, keyp2, des2);
     }
   
 
