@@ -1,8 +1,8 @@
-cmake_minimum_required(VERSION 3.4)
+cmake_minimum_required(VERSION 3.2)
 project(project5561)
 
-set(OpenCV_LIBS -L${CMAKE_CURRENT_SOURCE_DIR}/../3rd-party/opencv-cv/linux/lib/
-        -lopencv_contrib
+set(OpenCV_LIBS
+	-lopencv_contrib
         -lopencv_nonfree
         -lopencv_videostab
         -lopencv_photo
@@ -32,7 +32,7 @@ link_directories("opencv_mars/lib")
 
 set(SOURCE_FILES findOrb.cpp)
 add_executable(orbTest ${SOURCE_FILES})
-target_link_libraries(orbTest ${OpenCV_LIBS})
+target_link_libraries(orbTest -lEyeMARS ${OpenCV_LIBS})
 
 set(SOURCE_FILES_EYEMARS EyeMARSTest.cpp)
 add_executable(eyeMARSTest ${SOURCE_FILES_EYEMARS})

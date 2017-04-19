@@ -1,40 +1,34 @@
 #include <iostream>
 #include <opencv2/opencv.hpp>
 #include <unistd.h>
-#include "include/imgproc/orb/orbextractor.h"
-
 
 using namespace cv;
 using namespace std;
 
 int main(int argc, char** argv) {
   if ( argc != 3 ){
-    printf("usage: DisplayImage.out <Image1_Path> <Image2_Path> extractorType\n");
+    printf("usage: DisplayImage.out <Image1_Path> <Image2_Path>\n");
     return -1;
   }
-  Mat im1=imread( argv[1]);cvtColor(im1, im1, cv::COLOR_RGB2GRAY);
-  Mat im2=imread( argv[2]);cvtColor(im2, im2, cv::COLOR_RGB2GRAY);
-  bool USE_ORB = argv[3];
+  Mat im1=imread( argv[1], CV_LOAD_IMAGE_GRAYSCALE);
+  Mat im2=imread( argv[2], CV_LOAD_IMAGE_GRAYSCALE); 
   if ( (!im1.data || !im2.data) ){
     printf("No image data \n");
     return -1;
    }
    Mat des1, des2;
-    
-    EyeMARS::orbextractor orb_extractor;
-    vector<cv::KeyPoint> keyp1, keyp2;
-    unsigned int descriptor_size = 0, distance_threshold = 0, score_threshold = 0;
-      
-    if (USE_ORB) {
-      descriptor_size = 32;
-      distance_threshold = 50;
-      score_threshold = 205;
-      orb_extractor.ExtractKeypointsDescriptors(im1, keyp1, des1);
-      orb_extractor.ExtractKeypointsDescriptors(im2, keyp2, des2);
-    }
-  
-
-
+   
+   Ptr<FeatureDetector> detector = ORB::create(500, 1.2f, 8, 31, 0, 2, ORB::FAST_SCORE, 31, 50);
+   //int minHessian = 400;
+   //detector->setHessianThreshold(minHessian);
+   //FeatureDetector detector(minHessian);
+   //OrbFeatureDetector detector(25, 1.0f, 2, 10, 0, 2, 0, 10);
+   Ptr<DescriptorExtractor> extractor = ORB::create();
+   vector<KeyPoint> keyp1, keyp2;
+   detector->detect(im1, keyp1);
+   detector->detect(im2, keyp2);
+   extractor->compute(im1, keyp1, des1);
+   extractor->compute(im2, keyp2, des2);
    
   namedWindow("Image 1", WINDOW_AUTOSIZE );
   namedWindow("Image 2", WINDOW_AUTOSIZE );
@@ -46,8 +40,7 @@ int main(int argc, char** argv) {
   
   cout << "numFeature1 "<< keyp1.size();
   cout << " numFeature2 "<< keyp2.size()<<endl;
-  /* 
-  // greedy matches
+   // greedy matches
    FlannBasedMatcher matcher;
    std::vector<DMatch> matches;
    if(des1.type()!=CV_32F) des1.convertTo(des1, CV_32F);
@@ -87,8 +80,6 @@ int main(int argc, char** argv) {
    
   //show detected matches
   imshow("Good Matches", img_matches);
-  */
-  
   /*
   for( int i = 0; i < (int)good_matches.size(); i++ ){
     printf( "-- Good Match [%d] Keypoint 1: %d  -- Keypoint 2: %d  \n",
