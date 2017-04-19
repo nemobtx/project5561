@@ -1,7 +1,7 @@
-cmake_minimum_required(VERSION 3.4)
+cmake_minimum_required(VERSION 3.2)
 project(project5561)
 
-set(OpenCV_LIBS -L${CMAKE_CURRENT_SOURCE_DIR}/../3rd-party/opencv-cv/linux/lib/
+set(OpenCV_LIBS
         -lopencv_contrib
         -lopencv_nonfree
         -lopencv_videostab
