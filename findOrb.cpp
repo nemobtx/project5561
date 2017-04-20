@@ -2,7 +2,7 @@
 #include <opencv2/opencv.hpp>
 //#include <unistd.h>
 #include "include/imgproc/orb/orbextractor.h"
-#include "include/imgproc/freak/freak.h"
+//#include "include/imgproc/freak/freak.h"
 
 using namespace cv;
 using namespace std;
@@ -36,10 +36,10 @@ int main(int argc, char** argv) {
    descriptor_size = 64;
    distance_threshold = 100;
    score_threshold = 480;
-   EyeMARS::FREAKExtractor freak_extractor;
+ //  EyeMARS::FREAKExtractor freak_extractor;
    
-   freak_extractor.FindAndExtractFreakFeatures(im1, keyp1, des1);
-   freak_extractor.FindAndExtractFreakFeatures(im2, keyp2, des2);
+ //  freak_extractor.FindAndExtractFreakFeatures(im1, keyp1, des1);
+  // freak_extractor.FindAndExtractFreakFeatures(im2, keyp2, des2);
  }
  
  namedWindow("Image 1", WINDOW_AUTOSIZE );
@@ -58,9 +58,9 @@ int main(int argc, char** argv) {
 
  cv::BFMatcher matcher(cv::NORM_HAMMING);
  std::vector<cv::DMatch> matches;
- if(des1.type()!=CV_32F) des1.convertTo(des1, CV_32F);
- if(des2.type()!=CV_32F) des2.convertTo(des2, CV_32F);
- matcher.match(des1, des2 matches);
+ if(des1.type()!=CV_8U) des1.convertTo(des1, CV_8U);
+ if(des2.type()!=CV_8U) des2.convertTo(des2, CV_8U);
+ matcher.match(des1, des2, matches);
  double max_dist = 0; double min_dist = 100;
  
  cout << "found "<<matches.size()<< " matches"<<endl;
@@ -89,9 +89,10 @@ for( int i = 0; i < des1.rows; i++ ) {
   cout << good_matches.size()<< " good matches"<<endl; 
   Mat img_matches;
   drawMatches( im1, keyp1, im2, keyp2,
-   good_matches, img_matches, Scalar::all(-1), Scalar::all(-1),
+   good_matches, img_matches, cv::Scalar::all(-1), cv::Scalar::all(-1),
    vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS );
-
+  //show detected matches
+  imshow("Good Matches", img_matches);
   /* 
   // greedy matches
    FlannBasedMatcher matcher;
