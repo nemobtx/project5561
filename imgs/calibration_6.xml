@@ -1,0 +1,75 @@
+<rig>
+    <device_id>CEIPBP5A1506005170</device_id>
+    <camera>
+        <camera_model name="" index="3" type="calibu_fu_fv_u0_v0_k1_k2_k3" version="8" is_cad="0">
+            <width>320</width>
+            <height>180</height>
+            <!--Use RDF matrix, [right down forward], to decide the coordinate frame convention.-->
+            <right>[ 1; 0; 0 ]</right>
+            <down>[ 0; 1; 0 ]</down>
+            <forward>[ 0; 0; 1 ]</forward>
+            <!--Camera parameters ordered as per type name.-->
+            <params> [261.127;   261.229;   161.847;   92.0545;   0.232588;   -0.688935;   0.677962] </params>
+        </camera_model>
+        <pose />
+    </camera>
+    <camera>
+        <camera_model name="" index="2" type="calibu_fu_fv_u0_v0_k1_k2_k3" version="8" is_cad="0">
+            <width>640</width>
+            <height>360</height>
+            <!--Use RDF matrix, [right down forward], to decide the coordinate frame convention.-->
+            <right>[ 1; 0; 0 ]</right>
+            <down>[ 0; 1; 0 ]</down>
+            <forward>[ 0; 0; 1 ]</forward>
+            <!--Camera parameters ordered as per type name.-->
+            <params> [522.254;   522.458;   323.694;   184.109;   0.232588;   -0.688935;   0.677962] </params>
+        </camera_model>
+        <pose />
+    </camera>
+    <camera>
+        <camera_model name="" index="1" type="calibu_fu_fv_u0_v0_k1_k2_k3" version="8" is_cad="0">
+            <width>1280</width>
+            <height>720</height>
+            <!--Use RDF matrix, [right down forward], to decide the coordinate frame convention.-->
+            <right>[ 1; 0; 0 ]</right>
+            <down>[ 0; 1; 0 ]</down>
+            <forward>[ 0; 0; 1 ]</forward>
+            <!--Camera parameters ordered as per type name.-->
+            <params> [1044.51;   1044.92;   647.387;   368.218;   0.232588;   -0.688935;   0.677962] </params>
+        </camera_model>
+        <pose />
+    </camera>
+    <camera>
+        <camera_model name="" index="0" type="calibu_fu_fv_u0_v0_w" version="8" is_cad="0">
+            <width>640</width>
+            <height>480</height>
+            <!--Use RDF matrix, [right down forward], to decide the coordinate frame convention.-->
+            <right>[ 1; 0; 0 ]</right>
+            <down>[ 0; 1; 0 ]</down>
+            <forward>[ 0; 0; 1 ]</forward>
+            <!--Camera parameters ordered as per type name.-->
+            <params> [256.474;   256.487;   328.671;   235.822;   0.920773] </params>
+        </camera_model>
+        <pose />
+    </camera>
+    <intrinsic_imu_calibration name="device " imu_id="100" serialno="0" type="" version="1.0" is_cad="0">
+        <b_w_b_a> [0;   0;   0;   0;   0;   0] </b_w_b_a>
+        <crossterms> [1, 0, 0, 0, 0, 0;   0, 1, 0, 0, 0, 0;   0, 0, 1, 0, 0, 0;   0, 0, 0, 1, 0, 0;   0, 0, 0, 0, 1, 0;   0, 0, 0, 0, 0, 1] </crossterms>
+        <gyro_noise_sigma>5.30884e-05</gyro_noise_sigma>
+        <gyro_bias_sigma>0.000141254</gyro_bias_sigma>
+        <accel_noise_sigma>0.00188365</accel_noise_sigma>
+        <accel_bias_sigma>0.0125893</accel_bias_sigma>
+    </intrinsic_imu_calibration>
+    <extrinsic_calibration name="device " index="0" frame_A_id="100" frame_B_id="3" serialno="0" type="" version="1.0" is_cad="0">
+        <A_T_B> [  0.00135113,     0.999348,   -0.0360801,  0.000151957;       0.999923, -0.000905861,    0.0123546,    0.0613599;      0.0123139,   -0.0360941,    -0.999273,   0.00309601] </A_T_B>
+    </extrinsic_calibration>
+    <extrinsic_calibration name="device " index="0" frame_A_id="100" frame_B_id="2" serialno="0" type="" version="1.0" is_cad="0">
+        <A_T_B> [  0.00135113,     0.999348,   -0.0360801,  0.000151957;       0.999923, -0.000905861,    0.0123546,    0.0613599;      0.0123139,   -0.0360941,    -0.999273,   0.00309601] </A_T_B>
+    </extrinsic_calibration>
+    <extrinsic_calibration name="device " index="0" frame_A_id="100" frame_B_id="1" serialno="0" type="" version="1.0" is_cad="0">
+        <A_T_B> [  0.00135113,     0.999348,   -0.0360801,  0.000151957;       0.999923, -0.000905861,    0.0123546,    0.0613599;      0.0123139,   -0.0360941,    -0.999273,   0.00309601] </A_T_B>
+    </extrinsic_calibration>
+    <extrinsic_calibration name="device " index="0" frame_A_id="100" frame_B_id="0" serialno="0" type="" version="1.0" is_cad="0">
+        <A_T_B> [ -0.0059802,    0.999727,  -0.0226064, 0.000764887;      0.999938,  0.00619145,  0.00928641,   0.0117329;    0.00942383,  -0.0225495,   -0.999701,  0.00368772] </A_T_B>
+    </extrinsic_calibration>
+</rig>

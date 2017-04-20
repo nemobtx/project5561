@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
     descriptor_size = 32;
     distance_threshold = 50;
     score_threshold = 205;
-    EyeMARS::orbextractor orb_extractor;
+    EyeMARS::orbextractor orb_extractor(200, 1.2f, 3, 31, 2, 31);
 
     orb_extractor.ExtractKeypointsDescriptors(im1, keyp1, des1);
     orb_extractor.ExtractKeypointsDescriptors(im2, keyp2, des2);
@@ -51,7 +51,7 @@ int main(int argc, char** argv) {
  imshow("Image 2", imDraw2);
  
  cout << "numFeature1 "<< keyp1.size();
- cout << " numFeature2 "<< keyp2.size()<<endl;
+ cout <<" numFeature2 "<< keyp2.size()<<endl;
 
 
   // Find matches
@@ -61,12 +61,12 @@ int main(int argc, char** argv) {
  if(des1.type()!=CV_8U) des1.convertTo(des1, CV_8U);
  if(des2.type()!=CV_8U) des2.convertTo(des2, CV_8U);
  matcher.match(des1, des2, matches);
- double max_dist = 0; double min_dist = 100;
+ float max_dist = 0; float min_dist = 150;
  
  cout << "found "<<matches.size()<< " matches"<<endl;
    //-- Quick calculation of max and min distances between keypoints
  for( int i = 0; i < des1.rows; i++ ){
-  double dist = matches[i].distance;
+  float dist = matches[i].distance;
   if( dist < min_dist ) min_dist = dist;
   if( dist > max_dist ) max_dist = dist;
 }
@@ -80,8 +80,7 @@ printf("-- Min dist : %f \n", min_dist );
   //-- PS.- radiusMatch can also be used here.
 std::vector< DMatch > good_matches;
 for( int i = 0; i < des1.rows; i++ ) { 
-//    if( matches[i].distance <= max(2*min_dist, 0.02) ){
-  if( matches[i].distance <= 150){
+  if( matches[i].distance <= distance_threshold){
     good_matches.push_back( matches[i]); }
   }
   //-- Draw only "good" matches
@@ -90,51 +89,9 @@ for( int i = 0; i < des1.rows; i++ ) {
   Mat img_matches;
   drawMatches( im1, keyp1, im2, keyp2,
    good_matches, img_matches, cv::Scalar::all(-1), cv::Scalar::all(-1),
-   vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS );
+   vector<char>(), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
   //show detected matches
   imshow("Good Matches", img_matches);
-  /* 
-  // greedy matches
-   FlannBasedMatcher matcher;
-   std::vector<DMatch> matches;
-   if(des1.type()!=CV_32F) des1.convertTo(des1, CV_32F);
-   if(des2.type()!=CV_32F) des2.convertTo(des2, CV_32F);
-   
-   matcher.match(des1, des2, matches);
-   double max_dist = 0; double min_dist = 100;
-  
-   cout << "found "<<matches.size()<< " matches"<<endl;
-   //-- Quick calculation of max and min distances between keypoints
-  for( int i = 0; i < des1.rows; i++ ){
-    double dist = matches[i].distance;
-    if( dist < min_dist ) min_dist = dist;
-    if( dist > max_dist ) max_dist = dist;
-  }
-  printf("-- Max dist : %f \n", max_dist );
-  printf("-- Min dist : %f \n", min_dist );
-
-  
-  //-- Draw only "good" matches (i.e. whose distance is less than 2*min_dist,
-  //-- or a small arbitary value ( 0.02 ) in the event that min_dist is very
-  //-- small)
-  //-- PS.- radiusMatch can also be used here.
-  std::vector< DMatch > good_matches;
-  for( int i = 0; i < des1.rows; i++ ) { 
-//    if( matches[i].distance <= max(2*min_dist, 0.02) ){
-  if( matches[i].distance <= 150){
-    good_matches.push_back( matches[i]); }
-  }
-  //-- Draw only "good" matches
-  cout << "drawing good matches...";
-  cout << good_matches.size()<< " good matches"<<endl; 
-  Mat img_matches;
-  drawMatches( im1, keyp1, im2, keyp2,
-               good_matches, img_matches, Scalar::all(-1), Scalar::all(-1),
-               vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS );
-   
-  //show detected matches
-  imshow("Good Matches", img_matches);
-  */
   
   /*
   for( int i = 0; i < (int)good_matches.size(); i++ ){
