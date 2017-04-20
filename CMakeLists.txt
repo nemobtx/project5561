@@ -36,7 +36,7 @@ target_link_libraries(orbTest -lEyeMARS ${OpenCV_LIBS})
 
 set(SOURCE_FILES_EYEMARS EyeMARSTest.cpp)
 add_executable(eyeMARSTest ${SOURCE_FILES_EYEMARS})
-target_link_libraries(eyeMARSTest -lEyeMARS ${OpenCV_LIBS})
+target_link_libraries(eyeMARSTest -lEyeMARS ${OpenCV_LIBS} -lRansac -lGeometry -lgomp)
 
 set(SOURCE_FILES_HIST histTest.cpp HistMatching.cpp)
 add_executable(histTest ${SOURCE_FILES_HIST})

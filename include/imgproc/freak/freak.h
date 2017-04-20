@@ -6,7 +6,7 @@
 #include "core/freak-feature.h"
 #include "opencv2/core.hpp"
 #include <memory>
-#include <demo-parameters/parameters.h>
+//#include <demo-parameters/parameters.h>
 
 #define USE_CV_FREAK
 
