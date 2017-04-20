@@ -11,13 +11,13 @@ using namespace cv;
 
 void
 HistMatching::histMatching(const float *src, const float *ref, uchar *mapping, CDF cdf) {
-  int sum_s = 0, sum_r = 0;
+  int sum_s = 0, sum_r = ref[0];
   uchar j = 0;
   for (int i = 0; i < 256; ++i) {
     sum_s += src[i];
     while (sum_r < sum_s) {
-      sum_r += ref[j];
       ++j;
+      sum_r += ref[j];
     }
     switch (cdf) {
       case CDF_CLOSER:
