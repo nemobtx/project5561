@@ -11,8 +11,12 @@ class HistMatching {
  private:
   typedef unsigned char uchar;
  public:
-  static void histMatching(const float *src, const float *ref, uchar *mapping);
+  enum CDF {
+    CDF_CLOSER, CDF_SMALLER, CDF_LARGER
+  };
+  static void histMatching(const float *src, const float *ref, uchar *mapping, CDF cdf);
   static void applyMatching(const cv::Mat *src, cv::Mat *dst, uchar *mapping);
+  static float matchingError(const float *src, const float *ref, const uchar *mapping, int im_size);
 };
 
 
