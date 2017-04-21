@@ -32,7 +32,7 @@ link_directories("opencv_mars/lib")
 
 set(SOURCE_FILES findOrb.cpp)
 add_executable(orbTest ${SOURCE_FILES})
-target_link_libraries(orbTest -lEyeMARS ${OpenCV_LIBS})
+target_link_libraries(orbTest -lEyeMARS ${OpenCV_LIBS} -lRansac -lGeometry -lgomp)
 
 set(SOURCE_FILES_EYEMARS EyeMARSTest.cpp)
 add_executable(eyeMARSTest ${SOURCE_FILES_EYEMARS})
