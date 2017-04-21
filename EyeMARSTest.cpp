@@ -7,8 +7,7 @@
 #include <Eigen/Dense>
 #include "imgproc/orb/orbextractor.h"
 #include "ransac-solver/five-point-solver.h"
-#include "imgproc/undistort.h"
-#include "core/image.h"
+#include "utils.h"
 
 using namespace std;
 using namespace Ransac;
@@ -37,7 +36,7 @@ int main() {
   kc << 0.921633, .0, .0, .0, .0;
   cv::Mat img1 = cv::imread("imgs/exposure0/1.jpg", IMREAD_GRAYSCALE);
   imshow("ha2", img1);
-  EyeMARS::Image image1(img1);
+
   EyeMARS::CameraParameters p1;
   p1.fc = fc;
   p1.kc = kc;
@@ -45,8 +44,9 @@ int main() {
   p1.width = 640;
   p1.height = 480;
   p1.fisheye = true;
-  EyeMARS::Image *image1_undist = EyeMARS::UndistortImage(&image1, p1);
-  cv::Mat img1_undist = image1_undist->CvMat();
+  
+  Mat img1_undist;
+  undist(img1, img1_undist, p1);
   imshow("ha", img1_undist);
   waitKey();
   return 0;
