@@ -1,7 +1,7 @@
 #ifndef EYEMARS_IMGPROC_UNDISTORT_H_
 #define EYEMARS_IMGPROC_UNDISTORT_H_
 
-#include <demo-parameters/parameters.h>
+//#include <demo-parameters/parameters.h>
 
 
 #include <types.h>
@@ -9,7 +9,7 @@
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/highgui/highgui.hpp"
 
-#include <demo-parameters/parameters.h>
+//#include <demo-parameters/parameters.h>
 
 
 namespace EyeMARS {
@@ -19,8 +19,8 @@ namespace EyeMARS {
     Eigen::Matrix<double, 5, 1> kc;
     Eigen::Matrix<double, 2, 1> cc;
     bool fisheye = 0;
-    int width = Parameters::instance()->camera_dimension_x;
-    int height = Parameters::instance()->camera_dimension_y;
+    int width;// = Parameters::instance()->camera_dimension_x;
+    int height;// = Parameters::instance()->camera_dimension_y;
   } CameraParameters;
 
   typedef struct {
