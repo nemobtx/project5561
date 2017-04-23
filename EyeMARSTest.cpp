@@ -34,7 +34,7 @@ int main() {
   fc << 255.528, 255.556;
   cc << 315.271, 243.758;
   kc << 0.921633, .0, .0, .0, .0;
-  cv::Mat img1 = cv::imread("imgs/exposure0/1.jpg", IMREAD_GRAYSCALE);
+  cv::Mat img1 = cv::imread("imgs/exposure0/1.jpg", cv::IMREAD_GRAYSCALE);
   imshow("ha2", img1);
 
   EyeMARS::CameraParameters p1;
