@@ -43,6 +43,17 @@ int main(int argc, char** argv) {
     printf("No image data \n");
     return -1;
   }
+  //rotate 90
+  Mat im1_rot, im2_rot;
+  transpose(im1_un, im1_rot);flip(im1_rot, im1_rot,0);
+   transpose(im2_un, im2_rot);flip(im2_rot, im2_rot,0);
+  /*
+  Point2f center(p1.width/2.0f, p1.height/2.0f);
+  Size rotSize = Size(p1.height, p1.width);
+  Mat rotMat = getRotationMatrix2D(center, 90, 1.0);
+  warpAffine(im1_un, im1_rot,rotMat, rotSize);
+  warpAffine(im2_un, im2_rot,rotMat, rotSize);
+  */
   
   Mat des1, des2;
   vector<cv::KeyPoint> keyp1, keyp2;
@@ -55,8 +66,8 @@ int main(int argc, char** argv) {
     // max_features, scale_factor,pyramid_level, edge_threshold, wta_k, patch_size
     EyeMARS::orbextractor orb_extractor(300, 1.2f, 3, 31, 4, 31);
 
-    orb_extractor.ExtractKeypointsDescriptors(im1_un, keyp1, des1);
-    orb_extractor.ExtractKeypointsDescriptors(im2_un, keyp2, des2);
+    orb_extractor.ExtractKeypointsDescriptors(im1_rot, keyp1, des1);
+    orb_extractor.ExtractKeypointsDescriptors(im2_rot, keyp2, des2);
   } else {
       // freak
    descriptor_size = 64;
@@ -71,8 +82,8 @@ int main(int argc, char** argv) {
  namedWindow("Image 1", WINDOW_AUTOSIZE );
  namedWindow("Image 2", WINDOW_AUTOSIZE );
  Mat imDraw1, imDraw2;
- drawKeypoints(im1_un, keyp1, imDraw1);
- drawKeypoints(im2_un, keyp2, imDraw2);
+ drawKeypoints(im1_rot, keyp1, imDraw1);
+ drawKeypoints(im2_rot, keyp2, imDraw2);
  imshow("Image 1", imDraw1);
  imshow("Image 2", imDraw2);
  
@@ -101,7 +112,7 @@ int main(int argc, char** argv) {
 printf("-- Max dist : %f \n", max_dist );
 printf("-- Min dist : %f \n", min_dist );
 
-//distance_threshold =20;
+distance_threshold =20;
 std::vector< DMatch > good_matches;
 for( int i = 0; i < des1.rows; i++ ) { 
   if( matches[i].distance <= distance_threshold){
@@ -112,7 +123,7 @@ for( int i = 0; i < des1.rows; i++ ) {
   cout << good_matches.size()<< " good matches"<<endl; 
   Mat img_matches;
   int numMatches = good_matches.size();
-  drawMatches( im1_un, keyp1, im2_un, keyp2,
+  drawMatches( im1_rot, keyp1, im2_rot, keyp2,
    good_matches, img_matches, cv::Scalar::all(-1), cv::Scalar::all(-1),
    vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
   //cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS
@@ -123,11 +134,11 @@ for( int i = 0; i < des1.rows; i++ ) {
   Eigen::Matrix3f Kinv1, Kinv2;
   //Kinv1 << 1,0,0,0,1,0,0,0,1;
   //Kinv2 =Kinv1;
-  Kinv1 << 0.0039, 0, -1.2338,
-	  0, 0.0039, -0.9538,
+  Kinv1 << 0.0039, 0, -0.9538,
+	  0, 0.0039, -1.2338,
 	  0,0,1;
-  Kinv2 << 0.0039, 0, -1.2815,
-	  0, 0.0039, -0.9194,
+  Kinv2 << 0.0039, 0, -0.9194,
+	  0, 0.0039, -1.2815,
 	  0,0,1;
   FivePointSolver solver;//mars lab 5 point RANSAC
   int numIter = 500;
@@ -181,7 +192,7 @@ for( int i = 0; i < des1.rows; i++ ) {
     inlier_matches.push_back( good_matches[i]); 
   }
   Mat in_matches;
-  drawMatches( im1_un, keyp1, im2_un, keyp2,
+  drawMatches( im1_rot, keyp1, im2_rot, keyp2,
    inlier_matches, in_matches, cv::Scalar::all(-1), cv::Scalar::all(-1),
    vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
   //cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS
