@@ -101,7 +101,7 @@ int main(int argc, char** argv) {
 printf("-- Max dist : %f \n", max_dist );
 printf("-- Min dist : %f \n", min_dist );
 
-distance_threshold = 20;
+//distance_threshold =20;
 std::vector< DMatch > good_matches;
 for( int i = 0; i < des1.rows; i++ ) { 
   if( matches[i].distance <= distance_threshold){
