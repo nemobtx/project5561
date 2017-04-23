@@ -12,8 +12,8 @@ using namespace std;
 using namespace cv;
 
 int main() {
-  Mat img1 = imread("imgs/d0.jpg");
-  Mat img2 = imread("imgs/e-1.jpg");
+  Mat img1 = imread("imgs/exposure0/1.jpg");
+  Mat img2 = imread("imgs/exposure-1/1.jpg");
 
   cvtColor(img1, img1, COLOR_RGB2GRAY);
   cvtColor(img2, img2, COLOR_RGB2GRAY);
@@ -40,8 +40,10 @@ int main() {
 /*  for (int i = 0; i < 256; ++i) {
     cout << (int) mapping[i] << " ";
   }*/
-
-//  imshow("matched", img_matched);
-//  waitKey();
+  imshow("target", img2);
+  imshow("reference", img1);
+  imshow("matched", img_matched);
+  imwrite("imgs/exposure-1/1_matched.jpg", img_matched);
+  waitKey();
   return 0;
 }
