@@ -42,3 +42,7 @@ set(SOURCE_FILES_HIST histTest.cpp HistMatching.cpp)
 add_executable(histTest ${SOURCE_FILES_HIST})
 target_link_libraries(histTest ${OpenCV_LIBS})
 
+set(SOURCE_FILES_EQ eqTest.cpp)
+add_executable(eqTest ${SOURCE_FILES_EQ})
+target_link_libraries(eqTest ${OpenCV_LIBS})
+
