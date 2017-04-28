@@ -13,12 +13,35 @@ using namespace std;
 using namespace Eigen;
 
 int main(int argc, char** argv) {
-  if ( argc != 4 ){
-    printf("usage: DisplayImage.out <Image1_Path> <Image2_Path> extractorType\n");
+  if ( argc < 3 ){
+    printf("usage: ./orbTest <Image1_Path> <Image2_Path> <ransac iter> <ransac thres> <maxsuppress dist>\n");
     return -1;
+  } else if(argc == 4){
+    int rIter = argv[3];
+    double rThres = 0.5;
+    float distThres = 5;
+
+  } else if(argc == 5){
+    int rIter = argv[3];
+    double rThres = argv[4];
+    float distThres = 5;
+
+  } else if (argc == 6){
+    int rIter = argv[3];
+    double rThres = argv[4];
+    float distThres = argv[5];
+
+  } else{
+    int rIter = 500;
+    double rThres = 0.5;
+    float distThres = 5;
   }
   Mat im1=cv::imread(argv[1]);
   Mat im2=cv::imread(argv[2]);
+  if ( (!im1.data || !im2.data) ){
+    printf("No image data \n");
+    return -1;
+  }
   cvtColor(im1, im1, COLOR_RGB2GRAY);
   cvtColor(im2, im2, COLOR_RGB2GRAY);
   // undistort the images
@@ -41,11 +64,11 @@ int main(int argc, char** argv) {
   undist(im1, im1_un, p1);
   undist(im2, im2_un, p6);
   
-  bool USE_ORB = argv[3];
-  if ( (!im1.data || !im2.data) ){
-    printf("No image data \n");
-    return -1;
-  }
+  //bool USE_ORB = argv[3];
+  //if ( (!im1.data || !im2.data) ){
+  //  printf("No image data \n");
+  //  return -1;
+  //}
   //rotate 90
   Mat im1_rot, im2_rot;
   transpose(im1_un, im1_rot);flip(im1_rot, im1_rot,0);
@@ -56,7 +79,7 @@ int main(int argc, char** argv) {
   
   Mat des1,des2,des1_temp,des2_temp;  
   vector<KeyPoint> keyp1,keyp2,keyp1_temp, keyp2_temp;
-  float distThres = 5;
+  //float distThres = 5;
   ob.findFeatures(im1_rot, des1_temp, keyp1_temp);
   ob.findFeatures(im2_rot, des2_temp, keyp2_temp);
   ob.drawFeatures(im1_rot, keyp1_temp, "features for im1");
@@ -80,7 +103,7 @@ int main(int argc, char** argv) {
   ob.drawORBmatches(im1_rot, im2_rot, keyp1, keyp2, matches, "BF matches");
   
   // RANSAC
-  ob.numIter = 500; ob.thresVal = 0.5;
+  ob.numIter = rIter; ob.thresVal = rThres;
   cout <<"Ransac iter: "<<ob.numIter << " threshold: "<<ob.thresVal<<endl;
   Eigen::Matrix3f Kinv1, Kinv2;
   //Kinv1 << 1,0,0,0,1,0,0,0,1;
