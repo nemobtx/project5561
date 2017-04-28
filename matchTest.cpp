@@ -6,6 +6,7 @@
 #include <opencv2/opencv.hpp>
 #include "utils.h"
 #include <string>
+#include <stdlib.h>
 #include "OrbMatching.hpp"
 
 using namespace cv;
@@ -17,19 +18,19 @@ int main(int argc, char** argv) {
     printf("usage: ./orbTest <Image1_Path> <Image2_Path> <ransac iter> <ransac thres> <maxsuppress dist>\n");
     return -1;
   } else if(argc == 4){
-    int rIter = argv[3];
+    int rIter = atoi(argv[3]);
     double rThres = 0.5;
     float distThres = 5;
 
   } else if(argc == 5){
-    int rIter = argv[3];
-    double rThres = argv[4];
+    int rIter = atoi(argv[3]);
+    double rThres = atof(argv[4]);
     float distThres = 5;
 
   } else if (argc == 6){
-    int rIter = argv[3];
-    double rThres = argv[4];
-    float distThres = argv[5];
+    int rIter = atoi(argv[3]);
+    double rThres = atof(argv[4]);
+    float distThres = atof(argv[5]);
 
   } else{
     int rIter = 500;
