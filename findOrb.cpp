@@ -17,8 +17,13 @@ int main(int argc, char** argv) {
     printf("usage: DisplayImage.out <Image1_Path> <Image2_Path> extractorType\n");
     return -1;
   }
-  Mat im1=imread( argv[1], cv::IMREAD_GRAYSCALE);
-  Mat im2=imread( argv[2], cv::IMREAD_GRAYSCALE);
+  Mat im1=cv::imread(argv[1]);
+  Mat im2=cv::imread(argv[2]);
+  cvtColor(im1, im1, COLOR_RGB2GRAY);
+  cvtColor(im2, im2, COLOR_RGB2GRAY);
+  //Mat im1=imread( argv[1], cv::IMREAD_GRAYSCALE);
+  //Mat im2=imread( argv[2], cv::IMREAD_GRAYSCALE);
+
   // undistort the images
   Vector2d fc1, cc1, fc6, cc6;
   Matrix<double, 5, 1> kc1, kc6;
@@ -44,9 +49,11 @@ int main(int argc, char** argv) {
     return -1;
   }
   //rotate 90
-  Mat im1_rot, im2_rot;
+  Mat im1_rot, im2_rot, im3_rot;
   transpose(im1_un, im1_rot);flip(im1_rot, im1_rot,0);
    transpose(im2_un, im2_rot);flip(im2_rot, im2_rot,0);
+  //equalizeHist(im2_rot, im3_rot);
+   //normalize(im2_rot, im3_rot, 0, 255, NORM_MINMAX);
   /*
   Point2f center(p1.width/2.0f, p1.height/2.0f);
   Size rotSize = Size(p1.height, p1.width);
@@ -55,8 +62,8 @@ int main(int argc, char** argv) {
   warpAffine(im2_un, im2_rot,rotMat, rotSize);
   */
   
-  Mat des1, des2;
-  vector<cv::KeyPoint> keyp1, keyp2;
+  Mat des1, des2;//, des3;
+  vector<cv::KeyPoint> keyp1, keyp2;//, keyp3;
   unsigned int descriptor_size = 0, distance_threshold = 0, score_threshold = 0;
   
   if (USE_ORB) {
@@ -68,6 +75,7 @@ int main(int argc, char** argv) {
 
     orb_extractor.ExtractKeypointsDescriptors(im1_rot, keyp1, des1);
     orb_extractor.ExtractKeypointsDescriptors(im2_rot, keyp2, des2);
+    //orb_extractor.ExtractKeypointsDescriptors(im3_rot, keyp3, des3);
   } else {
       // freak
    descriptor_size = 64;
@@ -81,14 +89,17 @@ int main(int argc, char** argv) {
  
  namedWindow("Image 1", WINDOW_AUTOSIZE );
  namedWindow("Image 2", WINDOW_AUTOSIZE );
- Mat imDraw1, imDraw2;
+ // namedWindow("Image 3", WINDOW_AUTOSIZE );
+ Mat imDraw1, imDraw2;//, imDraw3;
  drawKeypoints(im1_rot, keyp1, imDraw1);
  drawKeypoints(im2_rot, keyp2, imDraw2);
+ //drawKeypoints(im3_rot, keyp3, imDraw3);
  imshow("Image 1", imDraw1);
  imshow("Image 2", imDraw2);
- 
+ //imshow("Image 3", imDraw3);
  cout << "numFeature1 "<< keyp1.size();
- cout <<" numFeature2 "<< keyp2.size()<<endl;
+ //cout <<" numFeature2 "<< keyp2.size();
+ cout <<" numFeature3 "<< keyp2.size()<<endl;
 
 
  
@@ -99,7 +110,9 @@ int main(int argc, char** argv) {
  std::vector<cv::DMatch> matches;
  if(des1.type()!=CV_8U) des1.convertTo(des1, CV_8U);
  if(des2.type()!=CV_8U) des2.convertTo(des2, CV_8U);
+ //if(des3.type()!=CV_8U) des3.convertTo(des2, CV_8U);
  matcher.match(des1, des2, matches);
+ //matcher.match(des1, des3, matches);
  float max_dist = 0; float min_dist = 150;
  
  cout << "found "<<matches.size()<< " matches"<<endl;
@@ -157,7 +170,7 @@ for( int i = 0; i < des1.rows; i++ ) {
   }
   solver.setMeasurements(measurements_frame1, measurements_frame2);
   cout << solver.getErrorTolerance() <<endl;
-  solver.setErrorTolerance(0.5);
+  solver.setErrorTolerance(0.2);
   vector<int> inlier_index, outlier_index, bestInlier_index, bestOutlier_index;
   set<int> selInd_set; vector<int> selInd; int currInd = 0; 
   pair<set<int>::iterator,bool> ret(selInd_set.end(), false);
