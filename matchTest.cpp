@@ -5,6 +5,7 @@
 #include <iostream>
 #include <opencv2/opencv.hpp>
 #include "utils.h"
+#include <string>
 #include "OrbMatching.hpp"
 
 using namespace cv;
@@ -52,15 +53,34 @@ int main(int argc, char** argv) {
   
   ORBMatching ob;
   ob.distance_threshold = 20;
-  //5 point parameters
-  ob.numIter = 500; ob.thresVal = 0.5;
   
-  Mat des1,des2;  vector<KeyPoint> keyp1, keyp2;
-  ob.findFeatures(im1_rot, des1, keyp1);
-  ob.findFeatures(im2_rot, des2, keyp2);
+  Mat des1,des2,des1_temp,des2_temp;  
+  vector<KeyPoint> keyp1,keyp2,keyp1_temp, keyp2_temp;
+  float distThres = 5;
+  ob.findFeatures(im1_rot, des1_temp, keyp1_temp);
+  ob.findFeatures(im2_rot, des2_temp, keyp2_temp);
+  ob.drawFeatures(im1_rot, keyp1_temp, "features for im1");
+  ob.drawFeatures(im2_rot, keyp2_temp, "features for im2");
+  //cout << "num keypoints for im1: "<< keyp1_temp.size()<<", im2: "<<keyp2_temp.size()<<endl;
+  //cout << "descriptor size for im1: " << des1_temp.size().height<< " " << des1_temp.size().width;
+  //cout << ", for im2: " << des2_temp.size().height<< " " << des2_temp.size().width<<endl;
+  
+  ob.maxSuppresss(keyp1_temp, des1_temp, keyp1, des1, distThres);
+  ob.maxSuppresss(keyp2_temp, des2_temp, keyp2, des2, distThres);
+  ob.drawFeatures(im1_rot,keyp1, "max suppresed features im1");
+  ob.drawFeatures(im2_rot,keyp2, "max suppresed features im2");
+  //cout << "num keypoints for im1: "<< keyp1.size()<<", im2: "<<keyp2.size()<<endl;
+  //cout << "descriptor size for im1: " << des1.size().height<< " " << des1.size().width;
+  //cout << ", for im2: " << des2.size().height<< " " << des2.size().width<<endl;
+
+  
+  //BF Matches
   vector<DMatch> matches, inlierMatches;
-  ob.matchFeatures(im1_rot, im2_rot, des1, des2, keyp1, keyp2, matches);
+  ob.matchFeatures(des1, des2, keyp1, keyp2, matches);
+  ob.drawORBmatches(im1_rot, im2_rot, keyp1, keyp2, matches, "BF matches");
   
+  // RANSAC
+  ob.numIter = 500; ob.thresVal = 0.5;
   cout <<"Ransac iter: "<<ob.numIter << " threshold: "<<ob.thresVal<<endl;
   Eigen::Matrix3f Kinv1, Kinv2;
   //Kinv1 << 1,0,0,0,1,0,0,0,1;
@@ -72,13 +92,15 @@ int main(int argc, char** argv) {
 	  0, 0.0039, -1.2815,
 	  0,0,1;
    ob.fivePointInlier(keyp1, keyp2, Kinv1, Kinv2, matches, inlierMatches);
+   ob.drawORBmatches(im1_rot, im2_rot, keyp1, keyp2, inlierMatches, "inlier matches");
+   /*
    Mat in_matches;
    drawMatches( im1_rot, keyp1, im2_rot, keyp2,
 	    inlierMatches, in_matches, cv::Scalar::all(-1), cv::Scalar::all(-1),
 		vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
    imshow("inlier Matches", in_matches);
   //cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS
-  
+  */
     waitKey(0);
   sleep(20000);
    
