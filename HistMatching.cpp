@@ -40,14 +40,37 @@ void HistMatching::applyMatching(const cv::Mat *src, cv::Mat *dst, uchar *mappin
     }
   }
 }
-float HistMatching::matchingError(const float *src, const float *ref, const uchar *mapping, int im_size) {
+float HistMatching::matchingError(const float *src, const float *ref, const uchar *mapping) {
   float matched[256] = {0.0f};
   for (int i = 0; i < 256; ++i) {
     matched[mapping[i]] += src[i];
   }
   float sum = 0.0f;
   for (int i = 0; i < 256; ++i) {
-    sum += abs(ref[i] - matched[i]);
+    sum += (ref[i] - matched[i]) * (ref[i] - matched[i]);
   }
-  return sum / im_size;
+  return sqrt(sum / 256);
+}
+void HistMatching::histMatchingGML(const float *src, const float *ref, uchar *mapping) {
+  int sum_s = 0, sum_r = 0, fl1 = 0;
+  uchar j = 0, l = 0;
+  while (sum_r == 0) {
+    sum_r += ref[l];
+    ++l;
+  }
+  for (; l < 256; ++l) {
+    sum_r += ref[l];
+    while (sum_r > sum_s) {
+      sum_s += src[j];
+      ++j;
+    }
+    int fl = abs(sum_r - sum_s) <= abs(sum_s - src[j - 1] - sum_r) ? j : j - 1;
+    for (int i = fl1; i <= fl; ++i) {
+      mapping[i] = l;
+    }
+    if (j == 0)
+      break;
+    fl1 = fl + 1;
+    sum_r += ref[l];
+  }
 }

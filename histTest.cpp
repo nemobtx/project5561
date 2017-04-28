@@ -30,9 +30,12 @@ int main() {
   cout << hist2 << endl;*/
 
   unsigned char mapping[256];
-  HistMatching::histMatching((float *) hist2.data, (float *) hist1.data, mapping, HistMatching::CDF_CLOSER);
+/*  for (int i = 0; i < 256; ++i) {
+    mapping[i]=i;
+  }*/
+  HistMatching::histMatching((float *) hist2.data, (float *) hist1.data, mapping);
   cout << "Matching Error: "
-       << HistMatching::matchingError((float *) hist2.data, (float *) hist1.data, mapping, img2.rows * img2.cols)
+       << HistMatching::matchingError((float *) hist2.data, (float *) hist1.data, mapping)
        << endl;
   Mat img_matched;
   HistMatching::applyMatching(&img2, &img_matched, mapping);
