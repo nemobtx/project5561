@@ -7,6 +7,8 @@
 //#include <Eigen/Dense>
 #include "ransac-solver/five-point-solver.h"
 //#include "utils.h"
+#include <math.h>
+#include <string>
 #include "OrbMatching.hpp"
 
 
@@ -24,15 +26,16 @@ void ORBMatching::findFeatures(Mat& im, Mat& des, vector< cv::KeyPoint >& keyp) 
   EyeMARS::orbextractor orb_extractor(300, 1.2f, 3, 31, 4, 31);
   orb_extractor.ExtractKeypointsDescriptors(im, keyp, des);
   //namedWindow("Image", cv::WINDOW_AUTOSIZE );
+  /*
   Mat imDraw;
   drawKeypoints(im, keyp, imDraw);
   imshow("ORB features detected",imDraw);
   cout << "numFeature "<< keyp.size()<<endl;;
-  
+  */
 }
 
-void ORBMatching::matchFeatures(cv::Mat& im1, cv::Mat& im2, 
-		   cv::Mat& des1, cv::Mat&des2, 
+
+void ORBMatching::matchFeatures(cv::Mat& des1, cv::Mat&des2, 
 		   vector<cv::KeyPoint>& keyp1, vector<cv::KeyPoint>& keyp2,
 		   vector<DMatch>& good_matches){
   // Find matches
@@ -44,36 +47,24 @@ void ORBMatching::matchFeatures(cv::Mat& im1, cv::Mat& im2,
  //matcher.match(des1, des3, matches);
  float max_dist = 0; float min_dist = 150;
  
- cout << "found "<<matches.size()<< " matches"<<endl;
+ cout << "found "<<matches.size()<< " matches";
  //-- Quick calculation of max and min distances between keypoints
  for( int i = 0; i < des1.rows; i++ ){
   float dist = matches[i].distance;
   if( dist < min_dist ) min_dist = dist;
   if( dist > max_dist ) max_dist = dist;
   }
-  printf("-- Max dist : %f \n", max_dist );
-  printf("-- Min dist : %f \n", min_dist );
+  //printf("-- Max dist : %f \n", max_dist );
+  //printf("-- Min dist : %f \n", min_dist );
   //distance_threshold = 20;
   //std::vector< DMatch > good_matches;
   for( int i = 0; i < des1.rows; i++ ) { 
     if( matches[i].distance <= distance_threshold){
       good_matches.push_back( matches[i]); }
    }
-  //-- Draw only "good" matches
-  cout << "drawing good matches...";
-  cout << good_matches.size()<< " good matches"<<endl; 
-  Mat img_matches;
-  int numMatches = good_matches.size();
-  drawMatches( im1, keyp1, im2, keyp2,
-  good_matches, img_matches, cv::Scalar::all(-1), cv::Scalar::all(-1),
-  vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
-  //cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS
-  //show detected matches
-  imshow("Good Matches", img_matches);
-
- 
+   cout <<"..."<< good_matches.size()<< 
+   " good matches with distance threshold of "<< distance_threshold<<endl;
 }
-
 void ORBMatching::fivePointInlier(vector<KeyPoint>& keyp1, vector<KeyPoint>& keyp2,
 		     Eigen::Matrix3f& Kinv1, Eigen::Matrix3f& Kinv2, 
 		     vector<DMatch>& matches, vector<DMatch>& inlier_matches){
@@ -123,16 +114,68 @@ void ORBMatching::fivePointInlier(vector<KeyPoint>& keyp1, vector<KeyPoint>& key
     }
     selInd_set.clear(); selInd.clear();
   }
-  cout << bestInlier_index.size()<< " inliers and "<< 
+  cout <<"RANSAC found "<< bestInlier_index.size()<< " inliers and "<< 
            bestOutlier_index.size() << " outliers"<<endl; 
   for (auto i:inlier_index) {
-    cout << i << " ";
+    //cout << i << " ";
     inlier_matches.push_back(matches[i]); 
   }
   
 }
 
+
+void ORBMatching::maxSuppresss(vector<KeyPoint>& keyp, Mat& des,vector<KeyPoint>& keyp_new, Mat& des_new,float distThres){
+  int numKP = keyp.size();
+  float x_curr, y_curr, x_temp, y_temp;
+  int des_r = des.rows; 
+  des_new.reserve(des.rows); keyp_new.reserve(des.rows);
+  vector<int> keepInd(des_r,1); 
+  for(vector<KeyPoint>::iterator i = keyp.begin(); i!=keyp.end(); ++i){
+    if(keepInd[i-keyp.begin()]){
+      x_curr = i->pt.x;
+      y_curr = i->pt.y;
+      for(vector<KeyPoint>::iterator j=i; j != keyp.end(); ++j){
+	if(keepInd[j-keyp.begin()]){
+	  x_temp = j->pt.x;
+	  y_temp = j->pt.y;
+	  float dist = sqrt(pow(x_temp- x_curr, float(2.0))+pow(y_temp-y_curr, float(2.0)));
+	  if(dist < distThres){
+	      keepInd[j-keyp.begin()] = 0;
+	  }
+	}
+      }
+      keyp_new.push_back(*i);
+      des_new.push_back(des.row(i-keyp.begin()));
+    }
+  }
+}
   
   
-  
+void ORBMatching::drawFeatures(Mat& im, vector< cv::KeyPoint >& keyp, string name) {
+  //namedWindow("Image", cv::WINDOW_AUTOSIZE );
+  Mat imDraw;
+  drawKeypoints(im, keyp, imDraw);
+  imshow(name, imDraw);
+  //imshow("ORB features detected",imDraw);
+  //cout << "numFeature "<< keyp.size()<<endl;
+  //sleep(20000);
+}
+
+void ORBMatching::drawORBmatches(cv::Mat& im1, cv::Mat& im2,
+		vector<cv::KeyPoint>& keyp1, vector<cv::KeyPoint>& keyp2, 
+		vector<DMatch>& good_matches, string name) {
+  //-- Draw only "good" matches
+  //cout << "drawing good matches...";
+  //cout << good_matches.size()<< " good matches"<<endl; 
+  Mat img_matches;
+  int numMatches = good_matches.size();
+  drawMatches( im1, keyp1, im2, keyp2, good_matches, img_matches,
+	       cv::Scalar::all(-1), cv::Scalar::all(-1), vector<char>(),
+	       DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
+  //cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS
+  //show detected matches
+  imshow(name, img_matches);
+  //sleep(20000);
+
+}  
   
