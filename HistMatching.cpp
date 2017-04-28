@@ -74,3 +74,72 @@ void HistMatching::histMatchingGML(const float *src, const float *ref, uchar *ma
     sum_r += ref[l];
   }
 }
+void HistMatching::histMatchingDP(const float *src, const float *ref, uchar *mapping) {
+  double C[256][256];
+  int cdf_src[256], T[256][256];
+  cdf_src[0] = (int) src[0];
+  C[0][0] = ErrorMetric(cdf_src[0], (int) ref[0]);
+  T[0][0] = -1;
+  for (int j = 1; j < 256; ++j) {
+    cdf_src[j] = cdf_src[j - 1] + (int) src[j];
+    C[0][j] = ErrorMetric(cdf_src[j], (int) ref[0]);
+    T[0][j] = -1;
+  }
+  for (int i = 1; i < 256; ++i) {
+    C[i][0] = ErrorMetric(cdf_src[0], (int) ref[i]);
+    for (int j = 1; j < 256; ++j) {
+      double min_cost = ErrorMetric(cdf_src[j], (int) ref[i]);
+      T[i][j] = -1;
+      for (int jp = 0; jp <= j; ++jp) {
+        double row_cost = ErrorMetric(cdf_src[j] - cdf_src[jp], (int) ref[i]);
+        double cost = C[i - 1][jp] + row_cost;
+        if (cost < min_cost) {
+          min_cost = cost;
+          T[i][j] = jp;
+        }
+      }
+      C[i][j] = min_cost;
+    }
+  }
+  double min_C = C[255][255];
+  uchar min_i = 255;
+  for (uchar i = 0; i < 255; ++i) {
+    if (C[i][255] < min_C) {
+      min_C = C[i][255];
+      min_i = i;
+    }
+  }
+  for (int j = 255; j >= 0; --min_i) {
+    int jp = T[min_i][j];
+    for (int k = jp + 1; k <= j; ++k) {
+      mapping[k] = min_i;
+    }
+    j = jp;
+  }
+}
+double HistMatching::ErrorMetric(double h1, double h2) {
+  return abs(h1 - h2);
+}
+void HistMatching::cdfMatchingDP(const float *src, const float *ref, uchar *mapping) {
+  double C[256][256];
+  int cdf_src[256], cdf_ref[256], T[256][256];
+  cdf_src[0] = (int) src[0];
+  cdf_ref[0] = (int) ref[0];
+  C[0][0] = ErrorMetric(cdf_src[0], (int) ref[0]);
+  T[0][0] = -1;
+  for (int j = 1; j < 256; ++j) {
+    cdf_src[j] = cdf_src[j - 1] + (int) src[j];
+    cdf_ref[j] = cdf_ref[j - 1] + (int) ref[j];
+    C[0][j] = ErrorMetric(cdf_src[j], cdf_ref[0]);
+    T[0][j] = -1;
+  }
+  for (int i = 1; i < 256; ++i) {
+    C[i][0] = ErrorMetric(0, cdf_ref[i - 1]);
+    int min_cost_j = -1;
+    for (int j = 0; j < 256; ++j) {
+      if (C[i][j] > C[i - 1][j]) {
+
+      }
+    }
+  }
+}

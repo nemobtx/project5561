@@ -33,7 +33,7 @@ int main() {
 /*  for (int i = 0; i < 256; ++i) {
     mapping[i]=i;
   }*/
-  HistMatching::histMatching((float *) hist2.data, (float *) hist1.data, mapping);
+  HistMatching::histMatchingDP((float *) hist2.data, (float *) hist1.data, mapping);
   cout << "Matching Error: "
        << HistMatching::matchingError((float *) hist2.data, (float *) hist1.data, mapping)
        << endl;
