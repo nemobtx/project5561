@@ -14,8 +14,8 @@ using namespace std;
 using namespace Eigen;
 
 int main(int argc, char **argv) {
-  double rThres = 0.5;
-  float distThres = 5;
+  double rThres = 0.001;
+  float distThres = 7;
   int rIter = 500;
   if (argc < 3) {
     printf("usage: ./orbTest <Image1_Path> <Image2_Path> <ransac iter> <ransac thres> <maxsuppress dist>\n");
@@ -25,7 +25,6 @@ int main(int argc, char **argv) {
   } else if (argc == 5) {
     rIter = atoi(argv[3]);
     rThres = atof(argv[4]);
-    distThres = 5;
   } else if (argc == 6) {
     rIter = atoi(argv[3]);
     rThres = atof(argv[4]);
@@ -82,7 +81,7 @@ int main(int argc, char **argv) {
   flip(im2_rot, im2_rot, 0);
 
   ORBMatching ob;
-  ob.distance_threshold = 20;
+  ob.distance_threshold = 30;
 
   Mat des1, des2, des1_temp, des2_temp;
   vector<KeyPoint> keyp1, keyp2, keyp1_temp, keyp2_temp;
@@ -110,6 +109,7 @@ int main(int argc, char **argv) {
   ob.drawORBmatches(im1_rot, im2_rot, keyp1, keyp2, matches, "BF matches");
 
 // RANSAC
+  srand(time(NULL));
   ob.numIter = rIter;
   ob.thresVal = rThres;
   cout << "Ransac iter: " << ob.numIter << " threshold: " << ob.thresVal << endl;

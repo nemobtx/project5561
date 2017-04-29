@@ -15,7 +15,7 @@ class ORBMatching {
    //matching parameters
   int distance_threshold = 20;
   //5 point parameters
-  int numIter = 500;double thresVal = 0.5;
+  int numIter = 500; double thresVal = 0.5;
   void findFeatures(cv::Mat& im, cv::Mat& des, std::vector<cv::KeyPoint>& keyp);
   void matchFeatures(cv::Mat& des1, cv::Mat& des2,
 	   std::vector<cv::KeyPoint>& keyp1, std::vector<cv::KeyPoint>& keyp2, 

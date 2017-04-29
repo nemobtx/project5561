@@ -93,7 +93,6 @@ void ORBMatching::fivePointInlier(vector<KeyPoint>& keyp1, vector<KeyPoint>& key
   pair<set<int>::iterator,bool> ret(selInd_set.end(), false);
   int maxIn = 0;
   for (int i=0; i<numIter; ++i){
-    //srand(time(NULL));
     for(int j=0; j<5; ++j){
       while(!ret.second){
 	currInd = rand()%numMatches;
@@ -115,8 +114,8 @@ void ORBMatching::fivePointInlier(vector<KeyPoint>& keyp1, vector<KeyPoint>& key
     selInd_set.clear(); selInd.clear();
   }
   cout <<"RANSAC found "<< bestInlier_index.size()<< " inliers and "<< 
-           bestOutlier_index.size() << " outliers"<<endl; 
-  for (auto i:inlier_index) {
+           bestOutlier_index.size() << " outliers"<< endl; 
+  for (auto i:bestInlier_index) {
     //cout << i << " ";
     inlier_matches.push_back(matches[i]); 
   }
