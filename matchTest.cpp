@@ -17,6 +17,7 @@ int main(int argc, char **argv) {
   double rThres = 0.001;
   float distThres = 7;
   int rIter = 500;
+  int distance_threshold = 50;
   if (argc < 3) {
     printf("usage: ./orbTest <Image1_Path> <Image2_Path> <ransac iter> <ransac thres> <maxsuppress dist>\n");
     return -1;
@@ -81,7 +82,7 @@ int main(int argc, char **argv) {
   flip(im2_rot, im2_rot, 0);
 
   ORBMatching ob;
-  ob.distance_threshold = 30;
+  ob.distance_threshold = distance_threshold;
 
   Mat des1, des2, des1_temp, des2_temp;
   vector<KeyPoint> keyp1, keyp2, keyp1_temp, keyp2_temp;
@@ -113,15 +114,21 @@ int main(int argc, char **argv) {
   ob.numIter = rIter;
   ob.thresVal = rThres;
   cout << "Ransac iter: " << ob.numIter << " threshold: " << ob.thresVal << endl;
-  Eigen::Matrix3f Kinv1, Kinv2;
-//Kinv1 << 1,0,0,0,1,0,0,0,1;
-//Kinv2 =Kinv1;
+  Eigen::Matrix3d Kinv1, Kinv2;
+  Kinv1 << 1/p1.fc[0],0,-p1.cc[0]/p1.fc[0],
+	   0,1/p1.fc[1],-p1.cc[1]/p1.fc[1],
+	   0,0,1;
+  Kinv2 << 1/p6.fc[0],0,-p6.cc[0]/p6.fc[0],
+	   0,1/p6.fc[1],-p6.cc[1]/p6.fc[1],
+	   0,0,1;
+  /*
   Kinv1 << 0.0039, 0, -0.9538,
       0, 0.0039, -1.2338,
       0, 0, 1;
   Kinv2 << 0.0039, 0, -0.9194,
       0, 0.0039, -1.2815,
       0, 0, 1;
+      */
   ob.fivePointInlier(keyp1, keyp2, Kinv1, Kinv2, matches, inlierMatches);
   ob.drawORBmatches(im1_rot, im2_rot, keyp1, keyp2, inlierMatches, "inlier matches");
 /*
