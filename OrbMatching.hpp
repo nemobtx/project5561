@@ -22,7 +22,7 @@ class ORBMatching {
 	   std::vector<cv::DMatch>& good_matches);
   void fivePointInlier(std::vector<cv::KeyPoint>& keyp1,
 		       std::vector<cv::KeyPoint>& keyp2, 
-		       Eigen::Matrix3f& Kinv1, Eigen::Matrix3f& Kinv2,
+		       Eigen::Matrix3d& Kinv1, Eigen::Matrix3d& Kinv2,
 		       std::vector<cv::DMatch>& matches, 
 		       std::vector<cv::DMatch>& inlier_matches);
   void maxSuppresss(std::vector<cv::KeyPoint>& keyp, 
