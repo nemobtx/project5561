@@ -15,7 +15,7 @@ set(OpenCV_LIBS
         -lopencv_imgproc
         -lopencv_core
         )
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3")
 
 set(CMAKE_CXX_STANDARD 11)
 
@@ -30,7 +30,7 @@ link_directories("opencv_mars/lib")
 #add_executable(cvtest ${SOURCE_FILES})
 #target_link_libraries(cvtest ${OpenCV_LIBS})
 
-set(SOURCE_FILES matchTest.cpp OrbMatching.cpp)
+set(SOURCE_FILES matchTest.cpp OrbMatching.cpp five-point-algorithm.cpp five-point-solver.cpp)
 #set(SOURCE_FILES findOrb.cpp)
 add_executable(orbTest ${SOURCE_FILES})
 target_link_libraries(orbTest -lEyeMARS ${OpenCV_LIBS} -lRansac -lGeometry -lgomp)

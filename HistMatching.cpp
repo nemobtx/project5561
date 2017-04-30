@@ -125,8 +125,9 @@ void HistMatching::cdfMatchingDP(const float *src, const float *ref, uchar *mapp
   int cdf_src[256], cdf_ref[256], T[256][256];
   cdf_src[0] = (int) src[0];
   cdf_ref[0] = (int) ref[0];
-  C[0][0] = ErrorMetric(cdf_src[0], (int) ref[0]);
+  C[0][0] = ErrorMetric(cdf_src[0], cdf_ref[0]);
   T[0][0] = -1;
+  double cost0 = ErrorMetric(0, cdf_ref[0]);
   for (int j = 1; j < 256; ++j) {
     cdf_src[j] = cdf_src[j - 1] + (int) src[j];
     cdf_ref[j] = cdf_ref[j - 1] + (int) ref[j];
@@ -134,12 +135,17 @@ void HistMatching::cdfMatchingDP(const float *src, const float *ref, uchar *mapp
     T[0][j] = -1;
   }
   for (int i = 1; i < 256; ++i) {
-    C[i][0] = ErrorMetric(0, cdf_ref[i - 1]);
+    double min_cost = cost0;
     int min_cost_j = -1;
     for (int j = 0; j < 256; ++j) {
-      if (C[i][j] > C[i - 1][j]) {
-
-      }
+      if (min_cost > C[i - 1][j]) {
+        C[i][j] = C[i - 1][j] + ErrorMetric(cdf_src[j], cdf_ref[i]);
+        min_cost_j = j;
+      } else {
+        C[i][j] = min_cost + ErrorMetric(cdf_src[j], cdf_ref[i]);
+      };
+      T[i][j] = min_cost_j;
     }
+    cost0 += ErrorMetric(0, cdf_ref[i]);
   }
 }

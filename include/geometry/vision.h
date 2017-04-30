@@ -21,7 +21,7 @@
 #include <algebra.h>
 #include <float.h>
 
-#include <tictoc.h>
+//#include <tictoc.h>
 
 /** @namespace Geometry
  * The Geometry namespace.

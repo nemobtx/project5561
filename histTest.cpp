@@ -12,8 +12,8 @@ using namespace std;
 using namespace cv;
 
 int main() {
-  Mat img1 = imread("imgs/exposure0/1.jpg");
-  Mat img2 = imread("imgs/exposure-1/1.jpg");
+  Mat img1 = imread("imgs/exposure0/6.jpg");
+  Mat img2 = imread("imgs/exposure-1/6.jpg");
 
   cvtColor(img1, img1, COLOR_RGB2GRAY);
   cvtColor(img2, img2, COLOR_RGB2GRAY);
@@ -33,10 +33,10 @@ int main() {
 /*  for (int i = 0; i < 256; ++i) {
     mapping[i]=i;
   }*/
-  HistMatching::histMatchingDP((float *) hist2.data, (float *) hist1.data, mapping);
-  cout << "Matching Error: "
+  HistMatching::histMatching((float *) hist2.data, (float *) hist1.data, mapping);
+/*  cout << "Matching Error: "
        << HistMatching::matchingError((float *) hist2.data, (float *) hist1.data, mapping)
-       << endl;
+       << endl;*/
   Mat img_matched;
   HistMatching::applyMatching(&img2, &img_matched, mapping);
 
@@ -46,7 +46,7 @@ int main() {
   imshow("target", img2);
   imshow("reference", img1);
   imshow("matched", img_matched);
-  imwrite("imgs/exposure-1/1_matched.jpg", img_matched);
+  imwrite("imgs/exposure-1/6_matched.pgm", img_matched);
   waitKey();
   return 0;
 }
