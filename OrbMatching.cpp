@@ -39,7 +39,7 @@ void ORBMatching::matchFeatures(cv::Mat& des1, cv::Mat&des2,
 		   vector<cv::KeyPoint>& keyp1, vector<cv::KeyPoint>& keyp2,
 		   vector<DMatch>& good_matches){
   // Find matches
- cv::BFMatcher matcher(cv::NORM_HAMMING);
+ cv::BFMatcher matcher(cv::NORM_HAMMING, true);
  std::vector<cv::DMatch> matches;
  if(des1.type()!=CV_8U) des1.convertTo(des1, CV_8U);
  if(des2.type()!=CV_8U) des2.convertTo(des2, CV_8U);
@@ -108,7 +108,7 @@ void ORBMatching::fivePointInlier(vector<KeyPoint>& keyp1, vector<KeyPoint>& key
     // solve for Essential matrix and get inliers
     solver.SolveMinimal(selInd);
     solver.GetInliers(inlier_index, outlier_index);
-    //cout << "inlier size: "<< inlier_index.size()<< endl;
+    cout <<"iter "<<i<< " inlier size: "<< inlier_index.size()<< endl;
     if (inlier_index.size() > maxIn){
       maxIn = inlier_index.size();
       bestInlier_index = inlier_index;

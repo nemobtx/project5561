@@ -17,7 +17,7 @@ int main(int argc, char **argv) {
   double rThres = 0.001;
   float distThres = 7;
   int rIter = 500;
-  int distance_threshold = 50;
+  int distance_threshold = 30;
   if (argc < 3) {
     printf("usage: ./orbTest <Image1_Path> <Image2_Path> <ransac iter> <ransac thres> <maxsuppress dist>\n");
     return -1;
