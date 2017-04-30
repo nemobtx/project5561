@@ -296,25 +296,25 @@ int CheckEstimatedRotation(Eigen::Matrix3d& essentialN, Eigen::Vector3d& point1,
 }
 
 /// Solve the five point algorithm
-int FivePointAlgorithm(const Eigen::Matrix<double, 3, 5> &p1,
-                       const Eigen::Matrix<double, 3, 5> &p2,
+int FivePointAlgorithm(const Eigen::Matrix<double, 3, 6> &p1,
+                       const Eigen::Matrix<double, 3, 6> &p2,
                        Eigen::Matrix3d& c2_R_c1, Eigen::Vector3d& c2_t_c1) {
   Eigen::Matrix<double, 3, 30> essentialFive = Eigen::Matrix<double, 3, 30>::Zero();
   Eigen::Matrix3d essential = Eigen::Matrix3d::Zero();
   int sols = 0;
-  EstimateEssentialMatrix5Point(p1, p2, &essentialFive, sols);
+  EstimateEssentialMatrix5Point(p1.block<3,5>(0,0), p2.block<3,5>(0,0), &essentialFive, sols);
   if (sols == 1) {
     essential = essentialFive.block(0, 0, 3, 3);
   } else {
     double min_error = DBL_MAX;
     int select = 0;
     for (int i = 0; i < sols; i++) {
-      Eigen::Vector3d point1 = p1.col(4);
-      Eigen::Vector3d point2 = p2.col(4);
+      Eigen::Vector3d point1 = p1.col(5);
+      Eigen::Vector3d point2 = p2.col(5);
       Eigen::Matrix3d essential_matrix = essentialFive.block(0, 3 * i, 3, 3);
       double error = Geometry::SampsonEpipolarError(point1, point2,
                                                     essential_matrix);
-      error *= error;
+//      error *= error;
       if (error < min_error) {
         select = i;
         min_error = error;

@@ -35,8 +35,8 @@ FivePointSolver::~FivePointSolver() {
 
 //Any minimal solver will get the indexes for generating a model from here.
 void FivePointSolver::SolveMinimal(const std::vector<int>& indexes) {
-  Eigen::Matrix<double, 3, 5> sample1;
-  Eigen::Matrix<double, 3, 5> sample2;
+  Eigen::Matrix<double, 3, 6> sample1;
+  Eigen::Matrix<double, 3, 6> sample2;
   for (unsigned int i = indexes.size(); i--;) {
     sample1.col(i) = measurements_frame1.col(indexes[i]);
     sample2.col(i) = measurements_frame2.col(indexes[i]);

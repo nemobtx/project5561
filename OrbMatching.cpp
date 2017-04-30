@@ -95,7 +95,7 @@ void ORBMatching::fivePointInlier(vector<KeyPoint>& keyp1, vector<KeyPoint>& key
   pair<set<int>::iterator,bool> ret(selInd_set.end(), false);
   int maxIn = 0;
   for (int i=0; i<numIter; ++i){
-    for(int j=0; j<5; ++j){
+    for(int j=0; j<6; ++j){
       while(!ret.second){
 	currInd = rand()%numMatches;
 	//cout << "curind "<<currInd<<endl;

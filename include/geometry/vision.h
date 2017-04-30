@@ -60,8 +60,8 @@ inline Eigen::Vector3d EstimateUnitTranslation(const Eigen::Vector3d &bearing11,
 }
 
 /// Solve the five point algorithm, returns 1 on success 0 on failure.
-int FivePointAlgorithm(const Eigen::Matrix<double, 3, 5> &p1,
-                       const Eigen::Matrix<double, 3, 5> &p2,
+int FivePointAlgorithm(const Eigen::Matrix<double, 3, 6> &p1,
+                       const Eigen::Matrix<double, 3, 6> &p2,
                        Eigen::Matrix3d& c2_R_c1, Eigen::Vector3d& c2_t_c1);
 
 
