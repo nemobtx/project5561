@@ -49,7 +49,7 @@ void ORBMatching::matchFeatures(cv::Mat& des1, cv::Mat&des2,
  
  cout << "found "<<matches.size()<< " matches";
  //-- Quick calculation of max and min distances between keypoints
- for( int i = 0; i < des1.rows; i++ ){
+ for( int i = 0; i < matches.size(); i++ ){
   float dist = matches[i].distance;
   if( dist < min_dist ) min_dist = dist;
   if( dist > max_dist ) max_dist = dist;
@@ -58,7 +58,7 @@ void ORBMatching::matchFeatures(cv::Mat& des1, cv::Mat&des2,
   //printf("-- Min dist : %f \n", min_dist );
   //distance_threshold = 20;
   //std::vector< DMatch > good_matches;
-  for( int i = 0; i < des1.rows; i++ ) { 
+  for( int i = 0; i < matches.size(); i++ ) { 
     if( matches[i].distance <= distance_threshold){
       good_matches.push_back( matches[i]); }
    }
@@ -108,7 +108,7 @@ void ORBMatching::fivePointInlier(vector<KeyPoint>& keyp1, vector<KeyPoint>& key
     // solve for Essential matrix and get inliers
     solver.SolveMinimal(selInd);
     solver.GetInliers(inlier_index, outlier_index);
-    cout <<"iter "<<i<< " inlier size: "<< inlier_index.size()<< endl;
+    //cout <<"iter "<<i<< " inlier size: "<< inlier_index.size()<< endl;
     if (inlier_index.size() > maxIn){
       maxIn = inlier_index.size();
       bestInlier_index = inlier_index;
@@ -170,7 +170,8 @@ void ORBMatching::drawORBmatches(cv::Mat& im1, cv::Mat& im2,
   //cout << "drawing good matches...";
   //cout << good_matches.size()<< " good matches"<<endl; 
   Mat img_matches;
-  int numMatches = good_matches.size();
+  //int numMatches = good_matches.size();
+  //cout << "numMatches: " << numMatches<< " "<< good_matches[0];
   drawMatches( im1, keyp1, im2, keyp2, good_matches, img_matches,
 	       cv::Scalar::all(-1), cv::Scalar::all(-1), vector<char>(),
 	       DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);

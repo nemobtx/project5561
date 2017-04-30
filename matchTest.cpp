@@ -14,10 +14,10 @@ using namespace std;
 using namespace Eigen;
 
 int main(int argc, char **argv) {
-  double rThres = 0.001;
+  double rThres = 0.00003;
   float distThres = 7;
-  int rIter = 500;
-  int distance_threshold = 30;
+  int rIter = 5000;
+  int distance_threshold = 40;
   if (argc < 3) {
     printf("usage: ./orbTest <Image1_Path> <Image2_Path> <ransac iter> <ransac thres> <maxsuppress dist>\n");
     return -1;
@@ -37,10 +37,9 @@ int main(int argc, char **argv) {
     printf("No image data \n");
     return -1;
   }
-  cvtColor(im1, im1, COLOR_RGB2GRAY
-  );
-  cvtColor(im2, im2, COLOR_RGB2GRAY
-  );
+  cvtColor(im1, im1, COLOR_RGB2GRAY);
+  cvtColor(im2, im2, COLOR_RGB2GRAY);
+  
 // undistort the images
   Vector2d fc1, cc1, fc6, cc6;
   Matrix<double, 5, 1> kc1, kc6;
