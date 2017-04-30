@@ -74,7 +74,7 @@ void ORBMatching::fivePointInlier(vector<KeyPoint>& keyp1, vector<KeyPoint>& key
   MatrixXd measurements_frame1, measurements_frame2;
   measurements_frame1.resize(3, numMatches);
   measurements_frame2.resize(3, numMatches);
-  cout << numMatches<< endl;
+  //cout << numMatches<< endl;
   for (int i=0; i<numMatches; ++i){
     measurements_frame1(0,i) = Kinv1(0,0)*keyp1[i].pt.x+Kinv1(0,1)*keyp1[i].pt.y+Kinv1(0,2);
     measurements_frame1(1,i) = Kinv1(1,0)*keyp1[i].pt.x+Kinv1(1,1)*keyp1[i].pt.y+Kinv1(1,2);
