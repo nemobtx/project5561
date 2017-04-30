@@ -11,42 +11,41 @@
 using namespace std;
 using namespace cv;
 
-int main() {
-  Mat img1 = imread("imgs/exposure0/6.jpg");
-  Mat img2 = imread("imgs/exposure-1/6.jpg");
+int main(int argc, char **argv) {
+  Mat img1, img2;
+  Mat img_matched;
 
-  cvtColor(img1, img1, COLOR_RGB2GRAY);
-  cvtColor(img2, img2, COLOR_RGB2GRAY);
+  int n = 1;
+  if (argc > 1) {
+    n = atoi(argv[1]);
+  };
+  for (int i = 1; i <= n; ++i) {
 
-  int histSize = 256;
-  float range[] = {0, 256};
-  const float *histRange = {range};
-  Mat hist1, hist2;
+    img1 = imread("../imgs/exposure0/" + to_string(i) + ".jpg", IMREAD_GRAYSCALE);
+    img2 = imread("../imgs/exposure-1/" + to_string(i) + ".jpg", IMREAD_GRAYSCALE);
 
-  calcHist(&img1, 1, 0, Mat(), hist1, 1, &histSize, &histRange, true, false);
-  calcHist(&img2, 1, 0, Mat(), hist2, 1, &histSize, &histRange, true, false);
+    int histSize = 256;
+    float range[] = {0, 256};
+    const float *histRange = {range};
+    Mat hist1, hist2;
 
-/*  cout << hist1 << endl;
-  cout << hist2 << endl;*/
+    calcHist(&img1, 1, 0, Mat(), hist1, 1, &histSize, &histRange, true, false);
+    calcHist(&img2, 1, 0, Mat(), hist2, 1, &histSize, &histRange, true, false);
 
-  unsigned char mapping[256];
+    unsigned char mapping[256];
 /*  for (int i = 0; i < 256; ++i) {
     mapping[i]=i;
   }*/
-  HistMatching::histMatching((float *) hist2.data, (float *) hist1.data, mapping);
+    HistMatching::cdfMatchingDP((float *) hist2.data, (float *) hist1.data, mapping);
 /*  cout << "Matching Error: "
        << HistMatching::matchingError((float *) hist2.data, (float *) hist1.data, mapping)
        << endl;*/
-  Mat img_matched;
-  HistMatching::applyMatching(&img2, &img_matched, mapping);
-
-/*  for (int i = 0; i < 256; ++i) {
-    cout << (int) mapping[i] << " ";
-  }*/
+    HistMatching::applyMatching(&img2, &img_matched, mapping);
+    imwrite("../imgs/exposure-1/" + to_string(i) + "_matched.pgm", img_matched);
+  }
   imshow("target", img2);
   imshow("reference", img1);
   imshow("matched", img_matched);
-  imwrite("imgs/exposure-1/6_matched.pgm", img_matched);
   waitKey();
   return 0;
 }
