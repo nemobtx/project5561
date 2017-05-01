@@ -68,6 +68,7 @@ void ORBMatching::matchFeatures(cv::Mat& des1, cv::Mat&des2,
 void ORBMatching::fivePointInlier(vector<KeyPoint>& keyp1, vector<KeyPoint>& keyp2,
 		     Eigen::Matrix3d& Kinv1, Eigen::Matrix3d& Kinv2, 
 		     vector<DMatch>& matches, vector<DMatch>& inlier_matches){
+  assert(matches.size()>5);
   int numMatches = matches.size();
   FivePointSolver solver;//mars lab 5 point RANSAC
   //int numIter = 500; int thresVal = 0.5;

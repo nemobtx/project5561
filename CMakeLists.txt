@@ -31,9 +31,12 @@ link_directories("opencv_mars/lib")
 #target_link_libraries(cvtest ${OpenCV_LIBS})
 
 set(SOURCE_FILES matchTest.cpp OrbMatching.cpp five-point-algorithm.cpp five-point-solver.cpp)
-#set(SOURCE_FILES findOrb.cpp)
 add_executable(orbTest ${SOURCE_FILES})
 target_link_libraries(orbTest -lEyeMARS ${OpenCV_LIBS} -lRansac -lGeometry -lgomp)
+
+set(SOURCE_FILES matchTest_debug.cpp OrbMatching.cpp five-point-algorithm.cpp five-point-solver.cpp)
+add_executable(orbDebug ${SOURCE_FILES})
+target_link_libraries(orbDebug -lEyeMARS ${OpenCV_LIBS} -lRansac -lGeometry -lgomp)
 
 set(SOURCE_FILES_EYEMARS EyeMARSTest.cpp)
 add_executable(eyeMARSTest ${SOURCE_FILES_EYEMARS})
