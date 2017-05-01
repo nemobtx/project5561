@@ -118,7 +118,7 @@ void HistMatching::histMatchingDP(const float *src, const float *ref, uchar *map
   }
 }
 double HistMatching::ErrorMetric(double h1, double h2) {
-  return (h1 - h2)*(h1 - h2);
+  return (h1 - h2) * (h1 - h2);
 }
 void HistMatching::cdfMatchingDP(const float *src, const float *ref, uchar *mapping) {
   double C[256][256];
@@ -141,6 +141,7 @@ void HistMatching::cdfMatchingDP(const float *src, const float *ref, uchar *mapp
       if (min_cost > C[i - 1][j]) {
         C[i][j] = C[i - 1][j] + ErrorMetric(cdf_src[j], cdf_ref[i]);
         min_cost_j = j;
+        min_cost = C[i - 1][j];
       } else {
         C[i][j] = min_cost + ErrorMetric(cdf_src[j], cdf_ref[i]);
       };
