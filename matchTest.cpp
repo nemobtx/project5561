@@ -58,7 +58,7 @@ int main(int argc, char **argv) {
     //bad perfomrance: 11,12, 13
     outFile.open("orb_rThres"+to_string(rThres)+"_rIter"+to_string(rIter)+"_"+argv[1]+"_"+argv[2]+".txt");
     if(outFile.is_open()) {
-        outFile<<setw(3)<<"im "<<setw(12)<<"#feature 0  "<<setw(12)<<"#feature -1 "<<setw(10)<<"#inliers  "<<setw(10)<<"#outliers "<<endl;
+        outFile<<setw(3)<<"im, "<<setw(12)<<"#feature_0, "<<setw(12)<<"#feature-1, "<<setw(10)<<"#inliers, "<<setw(10)<<"#outliers"<<endl;
         for(int n=startInd ; n<endInd; ++n) {
             cout <<"im: "<<n<<endl;
 
@@ -70,7 +70,7 @@ int main(int argc, char **argv) {
 		      printf("No image data \n");
 		      continue;
 		    }
-		    outFile<<setw(3)<<to_string(n)+"m";
+		    outFile<<setw(3)<<to_string(n)+"m,";
 
                 } else if(m == 2) {
                     im2 = imread("imgs/exposure-1/" + to_string(n) + "_eq.jpg", cv::IMREAD_GRAYSCALE);
@@ -79,7 +79,7 @@ int main(int argc, char **argv) {
 		      printf("No image data \n");
 		      continue;
 		    }
-		    outFile<<setw(3)<<to_string(n)+"eq";
+		    outFile<<setw(3)<<to_string(n)+"eq,";
                 } else {
                     im2 = imread("imgs/exposure-1/" + to_string(n) + ".jpg", cv::IMREAD_GRAYSCALE);
                     im1 = imread("imgs/exposure0/" + to_string(n) + ".jpg", cv::IMREAD_GRAYSCALE);
@@ -87,7 +87,7 @@ int main(int argc, char **argv) {
 		      printf("No image data \n");
 		      continue;
 		    }
-		    outFile<<setw(3)<<to_string(n)+"o";
+		    outFile<<setw(3)<<to_string(n)+"o,";
                 }
                 // undistort the images
                 Vector2d fc1, cc1, fc6, cc6;
@@ -163,8 +163,8 @@ int main(int argc, char **argv) {
 		  */
 		  ob.fivePointInlier(keyp1, keyp2, Kinv1, Kinv2, matches, inlierMatches);
 		  //ob.drawORBmatches(im1_rot, im2_rot, keyp1, keyp2, inlierMatches, "inlier matches"+to_string(m));
-		  outFile<<setw(12)<<keyp1.size()<<setw(12)<<keyp2.size()
-			<<setw(10)<< inlierMatches.size()<<setw(10)<< matches.size()-inlierMatches.size()<<endl;
+		  outFile<<setw(12)<<keyp1.size()<<","<<setw(12)<<keyp2.size()<<","
+			<<setw(10)<< inlierMatches.size()<<","<<setw(10)<< matches.size()-inlierMatches.size()<<endl;
 		}
 		im1.release();
                 im2.release();
